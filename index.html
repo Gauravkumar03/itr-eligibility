@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Determine ITR Form</title>
+</head>
+
+<body>
+    <h2>Determine Your ITR Form</h2>
+    <form id="itrForm">
+        <div>
+            <label for="totalIncome">Total Income:</label>
+            <input type="number" id="totalIncome" required>
+        </div>
+        <div>
+            <label for="salaryIncome">Salary Income:</label>
+            <input type="number" id="salaryIncome">
+        </div>
+        <div>
+            <label for="housePropertyIncome">Income from House Property:</label>
+            <input type="number" id="housePropertyIncome">
+        </div>
+        <div>
+            <label for="capitalGains">Capital Gains:</label>
+            <input type="number" id="capitalGains">
+        </div>
+        <div>
+            <label for="businessIncome">Business Income:</label>
+            <input type="number" id="businessIncome">
+        </div>
+        <div>
+            <label for="professionIncome">Professional Income:</label>
+            <input type="number" id="professionIncome">
+        </div>
+        <div>
+            <label for="residentStatus">Resident Status:</label>
+            <select id="residentStatus">
+                <option value="resident">Resident</option>
+                <option value="NRI">NRI</option>
+            </select>
+        </div>
+        <div>
+            <label for="turnover44AD">Turnover under Section 44AD:</label>
+            <input type="number" id="turnover44AD">
+        </div>
+        <div>
+            <label for="turnover44ADA">Turnover under Section 44ADA:</label>
+            <input type="number" id="turnover44ADA">
+        </div>
+        <div>
+            <label for="stockProfitsLosses">Stock Profits/Losses:</label>
+            <input type="number" id="stockProfitsLosses">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('itrForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Gather form data
+            const formData = {
+                totalIncome: parseFloat(document.getElementById('totalIncome').value),
+                salaryIncome: parseFloat(document.getElementById('salaryIncome').value),
+                housePropertyIncome: parseFloat(document.getElementById('housePropertyIncome').value),
+                capitalGains: parseFloat(document.getElementById('capitalGains').value),
+                businessIncome: parseFloat(document.getElementById('businessIncome').value),
+                professionIncome: parseFloat(document.getElementById('professionIncome').value),
+                residentStatus: document.getElementById('residentStatus').value,
+                turnover44AD: parseFloat(document.getElementById('turnover44AD').value),
+                turnover44ADA: parseFloat(document.getElementById('turnover44ADA').value),
+                stockProfitsLosses: parseFloat(document.getElementById('stockProfitsLosses').value)
+            };
+
+            // Determine ITR form (use the determineITRForm function logic here)
+            const itrForm = determineITRForm(formData);
+
+            // Display result
+            document.getElementById('result').textContent = `Recommended ITR Form: ${itrForm}`;
+        });
+
+        function determineITRForm({
+            totalIncome,
+            salaryIncome,
+            housePropertyIncome,
+            capitalGains,
+            businessIncome,
+            professionIncome,
+            residentStatus,
+            turnover44AD,
+            turnover44ADA,
+            stockProfitsLosses
+        }) {
+            // (Place the ITR form determination logic here)
+            if (residentStatus === 'resident' && totalIncome <= 5000000 && salaryIncome && (housePropertyIncome || housePropertyIncome === 0) && !capitalGains && !businessIncome && !professionIncome && !stockProfitsLosses) {
+                return 'ITR-1';
+            }
+
+            // Check for ITR-2 Eligibility
+            if ((residentStatus === 'resident' || residentStatus === 'NRI') && (salaryIncome || housePropertyIncome || capitalGains) && !businessIncome && !professionIncome || stockProfitsLosses) {
+                return 'ITR-2';
+            }
+
+            // Check for ITR-3 Eligibility
+            if ((salaryIncome || housePropertyIncome || capitalGains || businessIncome || professionIncome || stockProfitsLosses) && (businessIncome || professionIncome || stockProfitsLosses)) {
+                return 'ITR-3';
+            }
+
+            // Check for ITR-4 Eligibility
+            if ((turnover44AD && turnover44AD <= 20000000) || (professionIncome && turnover44ADA <= 5000000)) {
+                return 'ITR-4';
+            }
+
+            // If none of the above conditions match
+            return 'Unable to determine ITR form. Please consult a tax professional.';
+        }
+    </script>
+</body>
+
+</html>
