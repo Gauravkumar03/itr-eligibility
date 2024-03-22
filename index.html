@@ -8,11 +8,11 @@
 </head>
 
 <body>
-    <h2>Determine Your ITR Form</h2>
+    <h2>Determine Your ITR Formmmm</h2>
     <form id="itrForm">
         <div>
             <label for="totalIncome">Total Income:</label>
-            <input type="number" id="totalIncome" required>
+            <input type="number" id="totalIncome">
         </div>
         <div>
             <label for="salaryIncome">Salary Income:</label>
@@ -21,6 +21,10 @@
         <div>
             <label for="housePropertyIncome">Income from House Property:</label>
             <input type="number" id="housePropertyIncome">
+        </div>
+        <div>
+            <label for="houses">Number of Houses:</label>
+            <input type="number" id="houses">
         </div>
         <div>
             <label for="capitalGains">Capital Gains:</label>
@@ -53,6 +57,34 @@
             <label for="stockProfitsLosses">Stock Profits/Losses:</label>
             <input type="number" id="stockProfitsLosses">
         </div>
+        <div>
+            <label for="huf">Individual / HUF:</label>
+            <select id="huf">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        <div>
+            <label for="business">Are you having a business Income?</label>
+            <select id="business">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        <div>
+            <label for="ada">Having presumptive Income under44 AD, 44 ADA?</label>
+            <select id="ada">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        <div>
+            <label for="agri">Having more than one house property, capital gain, foreign income / assets, Agricultural Income > 5000 ?</label>
+            <select id="agri">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
         <button type="submit">Submit</button>
     </form>
     <div id="result"></div>
@@ -66,13 +98,18 @@
                 totalIncome: parseFloat(document.getElementById('totalIncome').value),
                 salaryIncome: parseFloat(document.getElementById('salaryIncome').value),
                 housePropertyIncome: parseFloat(document.getElementById('housePropertyIncome').value),
+                houses: parseFloat(document.getElementById('houses').value),
                 capitalGains: parseFloat(document.getElementById('capitalGains').value),
                 businessIncome: parseFloat(document.getElementById('businessIncome').value),
                 professionIncome: parseFloat(document.getElementById('professionIncome').value),
                 residentStatus: document.getElementById('residentStatus').value,
                 turnover44AD: parseFloat(document.getElementById('turnover44AD').value),
                 turnover44ADA: parseFloat(document.getElementById('turnover44ADA').value),
-                stockProfitsLosses: parseFloat(document.getElementById('stockProfitsLosses').value)
+                stockProfitsLosses: parseFloat(document.getElementById('stockProfitsLosses').value),
+                huf: document.getElementById('huf'),
+                business: document.getElementById('business'),
+                ada: document.getElementById('ada'),
+                agri: document.getElementById('agri')
             };
 
             // Determine ITR form (use the determineITRForm function logic here)
@@ -86,16 +123,43 @@
             totalIncome,
             salaryIncome,
             housePropertyIncome,
+            houses,
             capitalGains,
             businessIncome,
             professionIncome,
             residentStatus,
             turnover44AD,
             turnover44ADA,
-            stockProfitsLosses
+            stockProfitsLosses,
+            huf,
+            business,
+            ada,
+            agri 
         }) {
             // (Place the ITR form determination logic here)
+            const bool = huf.value === 'yes' && business.value === 'yes' && ada.value === 'yes'
+            
+            if(bool) {
+                return 'ITR-3'
+            }
+
+            if(huf.value === 'yes' && business.value === 'yes' && ada === 'no') {
+                return 'ITR-4'
+            }
+
+            if(huf.value === 'yes' && business.value === 'no' && agr === 'yes') {
+                return 'ITR-1'
+            }
+
+            if(huf.value === 'yes' && business.value === 'no' && agr === 'no') {
+                return 'ITR-2'
+            }
+
+
             if (residentStatus === 'resident' && totalIncome <= 5000000 && salaryIncome && (housePropertyIncome || housePropertyIncome === 0) && !capitalGains && !businessIncome && !professionIncome && !stockProfitsLosses) {
+                if(houses > 1) {
+                    return 'ITR-2'
+                }
                 return 'ITR-1';
             }
 
@@ -111,6 +175,9 @@
 
             // Check for ITR-4 Eligibility
             if ((turnover44AD && turnover44AD <= 20000000) || (professionIncome && turnover44ADA <= 5000000)) {
+                if(houses > 1) {
+                    return 'ITR-3'
+                }
                 return 'ITR-4';
             }
 
