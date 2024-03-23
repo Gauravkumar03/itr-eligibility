@@ -134,7 +134,7 @@
             huf,
             business,
             ada,
-            agri 
+            agri
         }) {
             // (Place the ITR form determination logic here)
             const bool = huf.value === 'yes' && business.value === 'yes' && ada.value === 'yes'
@@ -147,11 +147,11 @@
                 return 'ITR-4'
             }
 
-            if(huf.value === 'yes' && business.value === 'no' && agr.value === 'yes') {
+            if(huf.value === 'yes' && business.value === 'no' && agri.value === 'yes') {
                 return 'ITR-1'
             }
 
-            if(huf.value === 'yes' && business.value === 'no' && agr.value === 'no') {
+            if(huf.value === 'yes' && business.value === 'no' && agri.value === 'no') {
                 return 'ITR-2'
             }
 
